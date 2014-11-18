@@ -82,9 +82,9 @@ p { margin:0px; }
   bottom:0px;
   width:200%;
   left:-50%;
-  transition:opacity 250ms;
+  /*transition:opacity 250ms;
   -moz-transition:opacity 250ms;
-  -webkit-transition:opacity 250ms;
+  -webkit-transition:opacity 250ms;*/
   }
 
 .spot {
@@ -209,19 +209,19 @@ var geojson = [
   { "geometry": { "type": "Point", "coordinates": [-0.15826575099322326, 51.52276172937508] },
     "properties": { "id": "baker", "zoom": 17.433876860084055, "bearing": -105.65442679399308 } },
   { "geometry": { "type": "Point", "coordinates": [-0.07571203, 51.51424049] },
-    "properties": { "id": "aldgate", "zoom": 16  } },
-  { "geometry": { "type": "Point", "coordinates": [-0.08533793, 51.50438536] },
-    "properties": { "id": "london-bridge", "zoom": 13  } },
+    "properties": { "id": "aldgate", "zoom": 16, "mapclass": "night"  } },
+  { "geometry": { "type": "Point", "coordinates": [-0.08806046435461212, 51.50674550839943] },
+    "properties": { "id": "london-bridge", "zoom": 16, "bearing": 102.14878010953407  } },
   { "geometry": { "type": "Point", "coordinates": [0.05991101, 51.48752939] },
     "properties": { "id": "woolwich", "zoom": 13  } },
   { "geometry": { "type": "Point", "coordinates": [-0.18335806, 51.49439521] },
-    "properties": { "id": "gloucester", "zoom": 13  } },
+    "properties": { "id": "gloucester", "zoom": 16  } },
   { "geometry": { "type": "Point", "coordinates": [-0.19684993, 51.5033856] },
-    "properties": { "id": "caulfield-gardens", "zoom": 13  } },
+    "properties": { "id": "caulfield-gardens", "zoom": 15  } },
   { "geometry": { "type": "Point", "coordinates": [-0.10669358, 51.51433123] },
-    "properties": { "id": "telegraph", "zoom": 13  } },
+    "properties": { "id": "telegraph", "zoom": 16  } },
   { "geometry": { "type": "Point", "coordinates": [-0.12416858, 51.50779757] },
-    "properties": { "id": "charing-cross", "zoom": 13  } }
+    "properties": { "id": "charing-cross", "zoom": 16  } }
 ];
 // var tiles = mapboxgl.layer().tilejson({
 //   tiles: [ "https://a.tiles.mapbox.com/v3/examples.map-liczq28b/{z}/{x}/{y}.png" ]
@@ -245,13 +245,7 @@ var geojson = [
 // no input handlers (mouse drag, scrollwheel, etc).
 //var map = mapboxgl.map('map', [tiles, spots], null, []);
 
-var map = new mapboxgl.Map({
-  container: 'map', // container id
-  style: 'https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v6.json', //stylesheet location
-  center: [51.50110000, -0.12960000], // starting position
-  zoom: 12 // starting zoom
-});
-
+var map;
 // Array of story section elements.
 var sections = document.getElementsByTagName('section');
 
@@ -275,9 +269,16 @@ var setActive = function(index, ease) {
 
   // Ease map to active marker.
   var feature = geojson[index];
+  
+  if (feature.properties.mapclass === "night") {
+      map.style.addClass('night');
+    } else {
+      map.style.removeClass('night');
+    }
+  
   var c = feature.geometry.coordinates;
   if (!ease) {
-    map.flyTo( [c[1],c[0]],feature.properties.zoom||14, feature.properties.bearing||0);
+    map.flyTo( [c[1],c[0]],feature.properties.zoom||14, feature.properties.bearing||0 );//, {"speed": 0.5, "curve":1.42});
   } else {
     map.flyTo( [c[1],c[0]],feature.properties.zoom||14, feature.properties.bearing||0);
   }
@@ -314,8 +315,24 @@ window.onscroll = _(function() {
   if (!active) setActive(sections.length - 1, true);
 }).debounce(10);
 
-// Set map to first section.
-setActive(0, false);
+mapboxgl.util.getJSON('https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v6.json', function (err, style) {
+  if (err) throw err;
+
+  // Set the global transition property in the stylesheet
+  style.transition = {
+    duration: 5000, // 1 second
+    delay: 1000
+  };
+  map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: style, //stylesheet location
+    center: [51.50110000, -0.12960000], // starting position
+    zoom: 12 // starting zoom
+  });
+  // Set map to first section.
+  setActive(0, false);
+});
+
 </script>
 
 </body>
