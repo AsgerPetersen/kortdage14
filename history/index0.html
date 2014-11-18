@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='UTF-8'/>
+<!--[if lt IE 9]>
+<script src="https://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src='underscore-min.js'></script>
+<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.4.2/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.4.2/mapbox-gl.css' rel='stylesheet' />
+<style>
+body {
+  margin:0px;
+  padding:0px;
+  font:normal 15px/20px Arial,sans-serif;
+  background:#fff;
+  }
+
+article {
+  width:33.3333%;
+  min-width:320px;
+  position:relative;
+  padding-top:40px;
+  padding-bottom:33.3333%;
+  }
+section {
+  padding:40px;
+  margin-left:40px;
+  position:relative;
+  transition:background 500ms, color 500ms;
+  -moz-transition:background 500ms, color 500ms;
+  -webkit-transition:background 500ms, color 500ms;
+  }
+section,
+section a {
+  color:#888;
+  color:rgba(128,128,128,0);
+  text-decoration:none;
+  text-shadow:rgba(64,64,64,1) 0px 0px 4px;
+  }
+section.active {
+  background:#222;
+  color:#eee;
+  }
+section.active a { color:#eee; }
+section.active small { color:#aaa; }
+h1 { font-size:2em; line-height:1em; }
+h2 { font-size:1.3333em; }
+h1,h2 { margin:0px 0px 10px; }
+p { margin:0px; }
+
+.scroll {
+  position:absolute;
+  right:0px; bottom:0px;
+  font-size:10px;
+  text-transform:uppercase;
+  padding:5px 10px;
+  }
+.colophon {
+  display:block;
+  margin-top:10px;
+  }
+
+.cover:before {
+  content:'';
+  display:block;
+  width:120px; height:120px;
+  margin:0px auto 20px;
+  }
+.cover.active:before { background:url(sprite.png) 0px -120px no-repeat; }
+
+#pane {
+  position:fixed;
+  top:0px;
+  bottom:0px;
+  right:0px;
+  width:66.6666%;
+  }
+#map  {
+  position:absolute;
+  top:0px;
+  bottom:0px;
+  width:200%;
+  left:-50%;
+  /*transition:opacity 250ms;
+  -moz-transition:opacity 250ms;
+  -webkit-transition:opacity 250ms;*/
+  }
+
+.spot {
+  width:120px;
+  height:120px;
+  margin:-60px 0px 0px -60px;
+  background:url(sprite.png) 120px 120px no-repeat;
+  position:absolute;
+  }
+.spot-cover { display:none; }
+.spot-baker { background-position:-130px 0px; }
+.spot-baker.active { background-position:-130px -120px; }
+.spot-aldgate { background-position:-260px 0px; }
+.spot-aldgate.active { background-position:-260px -120px; }
+.spot-london-bridge { background-position:-390px 0px; }
+.spot-london-bridge.active { background-position:-390px -120px; }
+.spot-woolwich { background-position:-520px 0px; }
+.spot-woolwich.active { background-position:-520px -120px; }
+.spot-gloucester { background-position:-650px 0px; }
+.spot-gloucester.active { background-position:-650px -120px; }
+.spot-caulfield-gardens { background-position:-780px 0px; }
+.spot-caulfield-gardens.active { background-position:-780px -120px; }
+.spot-telegraph { background-position:-910px 0px; }
+.spot-telegraph.active { background-position:-910px -120px; }
+.spot-charing-cross { background-position:-1040px 0px; }
+.spot-charing-cross.active { background-position:-1040px -120px; }
+
+/* Distinguish the "cover page" visually other sections. */
+body.section-0 #map { opacity:0.5; }
+
+@media (max-width:640px) {
+  body {
+    font-size:12px;
+    line-height:16px;
+    }
+  article {
+    width:100%;
+    min-width:100%;
+    padding-top:0px;
+    padding-bottom:200%;
+    }
+  section {
+    text-shadow:none;
+    margin-left:0px;
+    padding:30px;
+    }
+  section.active {
+    position:fixed;
+    top:0px; left:0px; right:0px;
+    }
+  #pane { width:100%; }
+  #map  {
+    bottom:0%;
+    left:0%;
+    width:100%;
+    height:150%;
+    }
+  }
+
+@media (min-width:1280px) {
+  body {
+    font-size:18px;
+    line-height:24px;
+    }
+  }
+</style>
+</head>
+<body class='section-0'>
+
+<div id='pane'><div id='map'></div></div>
+
+<article>
+  <section id='dk' class='cover active'>
+    <h1>Kortdage 2014</h1>
+    <p>En kort historie af Asger Petersen</p>
+    <small class='scroll'>Scroll ▼</small>
+  </section>
+  <section id='aalborg'>
+    <h2>Aalborg</h2>
+    <p>Aalborg eller Ålborg er en by i Region Nordjylland som med 109.092 indbyggere i byområdet (130.853 indbyggere inkl. Nørresundby) er Danmarks fjerdestørste by. Aalborg er Byregion Aalborgs hovedby og betegnes som værende Nordjyllands hovedstad. Aalborg Kommune er Danmarks tredjestørste målt på befolkningstal, og opstod i sin nuværende form 1. januar 2007 ved en sammenlægning af Aalborg Kommune (1970-2006) og nabokommunerne Hals, Nibe og Sejlflod.</p>
+  </section>
+  <section id='kongrescenter'>
+    <h2>Aalborg Kongres &amp; Kultur Center</h2>
+    <p>Aalborg Kongres & Kultur Center er et af Skandinaviens største og mest fleksible kongrescentre med 500.000 gæster og 1.000 arrangementer om året. Aalborg Kongres og Kultur Center ligger i byens største park, Kildeparken, som ligger centralt i Aalborg. Dette betyder blandt andet, at 1.500 hotelværesler er tilgængelig indenfor gå-afstand, og der kun er 10 minutter i taxa til Aalborg Lufthavn.</p>
+  </section>
+  <section id='jomfruanegade'>
+    <h2>Jomfru Ane Gade</h2>
+    <p>Jomfru Ane Gade – også blot kaldt Gaden, er en 150 meter lang og forholdsvis smal gågade i det centrale Aalborg, der udelukkende består af mere end 20 restauranter, diskoteker og værtshuse. Gadens flere end 20 restauranter og diskoteker omsætter for ca. 300 mio. kr. om året og har mellem 200 og 300 arbejdspladser. Det er bl.a. også Danmarks længste restaurationsgade og landets mest koncentrerede restaurations- og diskoteksmiljø.</p>
+  </section>
+  <section id='overblik'>
+    <h2>Overblik</h2>
+    <p><i>Overblik</i> substantiv, intetkøn<br /><b>Bøjning:</b> -ket<br />Det at (kunne) overskue noget indviklet eller erkende de vigtigste træk ved en sag<br /><b>Grammatik:</b> overblik over NOGET/hv+SÆTNING</p>
+  </section>
+  <section id='cabinn'>
+    <h2>Cabinn</h2>
+    <p>Hotel Cabinn Aalborg åbnede i oktober 2009. Hotellet ligger midt i byen med bl.a. Utzon Center, Nordkraft og den nye havnefront som naboer.</p>
+  </section>
+  <section id='kongresscenter2'>
+    <h2>Aalborg Kongres &amp; Kultur Center</h2>
+    <p>Aalborg Kongres & Kultur Center er et af Skandinaviens største og mest fleksible kongrescentre med 500.000 gæster og 1.000 arrangementer om året. Aalborg Kongres og Kultur Center ligger i byens største park, Kildeparken, som ligger centralt i Aalborg. Dette betyder blandt andet, at 1.500 hotelværesler er tilgængelig indenfor gå-afstand, og der kun er 10 minutter i taxa til Aalborg Lufthavn.</p>
+    <small class='colophon'>
+      Tyvstjålet og tilpasset fra <a href='https://www.mapbox.com/tutorial-sherlock/'>MapBox Sherlock tutorial</a><br/>
+      Map data &copy; <a href='http://openstreetmap.org/copyright'>OpenStreetMap Contributors</a><br/>
+      Map design &copy; <a href='http://mapbox.com/about/maps/'>MapBox</a>
+    </small>
+  </section>
+</article>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYXNnZXJwZXRlcnNlbiIsImEiOiJKSU5PYlhnIn0.pJ15OAscGE0LyxUZ7P_9Ag';
+var geojson = [
+  { "geometry": { "type": "Point", "coordinates": [13.11979149669321, 56.13072664929052] },
+    "properties": { "id": "dk", "zoom": 5 } },
+    
+  { "geometry": { "type": "Point", "coordinates": [10.061472318205887, 57.040740333853876] },
+    "properties": { "id": "aalborg", "zoom": 10.7, "bearing": 0 } },
+    
+  { "geometry": { "type": "Point", "coordinates": [9.915757408232139, 57.04351144884268] },
+    "properties": { "id": "kongrescenter", "zoom": 15.9  } },
+    
+  { "geometry": { "type": "Point", "coordinates": [9.9189504390296, 57.05084549365412] },
+    "properties": { "id": "jomfruanegade", "zoom": 17.12, "bearing": -77.11338276722205, "mapclass": "night"  } },
+  
+  { "geometry": { "type": "Point", "coordinates": [11.298772101864898, 57.088529418868774] },
+    "properties": { "id": "overblik", "zoom": 4, "mapclass": "night"  } },  
+    
+  { "geometry": { "type": "Point", "coordinates": [9.926957963417635, 57.048290013974935] },
+    "properties": { "id": "cabinn", "zoom":   18.83, "mapclass": "night"  } },
+  
+  { "geometry": { "type": "Point", "coordinates": [9.915757408232139, 57.04351144884268] },
+      "properties": { "id": "kongrescenter2", "zoom": 15.9  } }
+];
+// var tiles = mapboxgl.layer().tilejson({
+//   tiles: [ "https://a.tiles.mapbox.com/v3/examples.map-liczq28b/{z}/{x}/{y}.png" ]
+// });
+// 
+// // Use https for markers
+// mapboxgl.markers.marker_baseurl = 'https://a.tiles.mapbox.com/v3/marker/';
+// 
+// var spots = mapboxgl.markers.layer()
+//   // Load up markers from geojson data.
+//   .features(geojson)
+//   // Define a new factory function. Takes geojson input and returns a
+//   // DOM element that represents the point.
+//   .factory(function(f) {
+//     var el = document.createElement('div');
+//     el.className = 'spot spot-' + f.properties.id;
+//     return el;
+//   });
+
+// Creates the map with tile and marker layers and
+// no input handlers (mouse drag, scrollwheel, etc).
+//var map = mapboxgl.map('map', [tiles, spots], null, []);
+
+var map;
+// Array of story section elements.
+var sections = document.getElementsByTagName('section');
+
+// Array of marker elements with order matching section elements.
+// var markers = _(sections).map(function(section) {
+//   return _(spots.markers()).find(function(m) {
+//     return m.data.properties.id === section.id;
+//   });
+// });
+
+// Helper to set the active section.
+var setActive = function(index, ease) {
+  // Set active class on sections, markers.
+  _(sections).each(function(s) { s.className = s.className.replace(' active', '') });
+  //_(markers).each(function(m) { m.element.className = m.element.className.replace(' active', '') });
+  sections[index].className += ' active';
+  //markers[index].element.className += ' active';
+
+  // Set a body class for the active section.
+  document.body.className = 'section-' + index;
+
+  // Ease map to active marker.
+  var feature = geojson[index];
+  
+  if (feature.properties.mapclass === "night") {
+      map.style.addClass('night');
+    } else {
+      map.style.removeClass('night');
+    }
+  
+  var c = feature.geometry.coordinates;
+  if (!ease) {
+    map.flyTo( [c[1],c[0]],feature.properties.zoom||14, feature.properties.bearing||0 );//, {"speed": 0.5, "curve":1.42});
+  } else {
+    map.flyTo( [c[1],c[0]],feature.properties.zoom||14, feature.properties.bearing||0);
+  }
+
+  return true;
+};
+
+// Bind to scroll events to find the active section.
+window.onscroll = _(function() {
+  // IE 8
+  if (window.pageYOffset === undefined) {
+    var y = document.documentElement.scrollTop;
+    var h = document.documentElement.clientHeight;
+  } else {
+    var y = window.pageYOffset;
+    var h = window.innerHeight;
+  }
+
+  // If scrolled to the very top of the page set the first section active.
+  if (y === 0) return setActive(0, true);
+
+  // Otherwise, conditionally determine the extent to which page must be
+  // scrolled for each section. The first section that matches the current
+  // scroll position wins and exits the loop early.
+  var memo = 0;
+  var buffer = (h * 0.3333);
+  var active = _(sections).any(function(el, index) {
+    memo += el.offsetHeight;
+    return y < (memo-buffer) ? setActive(index, true) : false;
+  });
+
+  // If no section was set active the user has scrolled past the last section.
+  // Set the last section active.
+  if (!active) setActive(sections.length - 1, true);
+}).debounce(10);
+
+mapboxgl.util.getJSON('https://www.mapbox.com/mapbox-gl-styles/styles/outdoors-v6.json', function (err, style) {
+  if (err) throw err;
+
+  // Set the global transition property in the stylesheet
+  style.transition = {
+    duration: 5000, // 1 second
+    delay: 1000
+  };
+  map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: style, //stylesheet location
+    center: [56.13072664929052, 13.11979149669321], // starting position
+    zoom: 5 // starting zoom
+  });
+  // Set map to first section.
+  setActive(0, false);
+});
+
+</script>
+
+</body>
+</html>
