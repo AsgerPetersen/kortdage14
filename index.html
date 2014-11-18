@@ -44,7 +44,7 @@
 			<section>
 			  <h1>Vector tiles</h1>
 			  <h3>En ny teknologi til webkort</h3>
-			  <p><small><a href="http://www.septima.dk/asger/">asger@septima.dk</a> / <a href="http://twitter.com/asgerpetersen">@asgerpetersen</a></small></p>
+			  <p><small><a href="http://www.septima.dk/asger/" target="_blank">asger@septima.dk</a> / <a href="http://twitter.com/asgerpetersen" target="_blank">@asgerpetersen</a></small></p>
 			</section>
       <section>
         <h2>Kort alle vegne</h2>
@@ -98,7 +98,7 @@
 						<li>Trinløs zoom - ok</li>
             <li>Ingen rotation</li>
             <li>Pixels er per definition 0,28mm</li>
-            <li>Resourcekrævende at rendere et kort</li>
+            <li>Ressourcekrævende at rendere et kort</li>
 						<li>Næsten umulig at cache</li>
 						<li>"Langsom"</li>
           </ul>
@@ -106,7 +106,7 @@
         <!-- WMS end-->
 				<!-- WMTS -->
 				<section>
-					<h2>WMTS / TMS / ...</h2>
+					<h2>Tiles / WMTS / TMS / ...</h2>
 					<ul>
 						<li>"Hurtig"</li>
 						<li>Hastighed opnås gennem caching som gøres mulig ved at begrænse mulighederne</li>
@@ -123,6 +123,105 @@
 				</section>
       </section>
       <!-- Eksisterende rasterteknologier end -->
+			<!-- Vektor -->
+			<section>
+				<section>
+					<h2>Vektor!</h2>
+					<p>Lad klienten få vektordata og selv tegne sit kort</p>
+				</section>
+				<section>
+					<h2>Mange fordele</h2>
+					<ul>
+						<li>Klienten er i fuld kontrol med kartografi, filtrering, rotation etc</li>
+						<li>Samme datamængde uanset skærmopløsning</li>
+						<li>Klienten stiller selv CPU-ressourcer til rådighed</li>
+					</ul>
+				</section>
+				<section>
+					<h2>WFS?</h2>
+				</section>
+				<section>
+					<h2>Nej!</h2>
+					<ul>
+						<li>"Langsom"</li>
+						<li>Ressourcekrævende at besvare forespørgsel</li>
+						<li>Næsten umulig at cache</li>
+					</ul>
+				</section>
+			</section>
+			<!-- Vektor end -->
+			<!-- Vektor tiles -->
+			<section>
+				<section>
+					<h2>Vektor tiles</h2>
+					<p>For WFS hvad WMTS er for WMS...</p>
+				</section>
+				<section>
+					<h2>Princip</h2>
+					<ul>
+						<li>Vektordata klippet op i filer svarende til tiles fra en gammelkendt tile cache</li>
+						<li>Begræns brugerens muligheder, så resultatet kan ligge klar på serveren</li>
+						<li>Cache</li>
+					</ul>
+				</section>
+				<section>
+					<h3>Tile cache</h3>
+					<p>
+						<a href="http://b.tile.openstreetmap.org/14/8643/5015.png" target="_blank">http://b.tile.openstreetmap.org/14/8643/5015.png</a>
+						<img src="img/osm_14_8643_5015.png" />
+					</p>
+				</section>
+				<section>
+					<h3>Vektor tiles</h3>
+					<p>
+				  	<a href="http://vector.mapzen.com/osm/all/14/8643/5015.json" target="_blank">http://vector.mapzen.com/osm/all/14/8643/5015.json</a>	
+<pre><code class="geojson">...
+{
+ "type":"Feature",
+ "geometry":{"type":"LineString","coordinates":[[9.912787,57.051389],[9.912461,57.050407],[9.912304,57.050341],[9.912010,57.049623]]},
+ "id":"32139537",
+ "clipped":true,
+ "properties":{"kind":"minor_road","name":"Svendsgade","sort_key":-6.000000,"is_link":"no","is_tunnel":"no","is_bridge":"no","highway":"residential"}
+}
+...</code></pre>
+				</p>
+				</section>
+			</section>
+			<!-- Vektor tiles end-->
+			
+			<!-- udfordringer -->
+			<section>
+        <section>
+          <h2>Udfordringer</h2>
+        </section>
+				<section>
+					<h2>Rendering på klienten</h2>
+          <ul>
+            <li>Eksisterende klienter (OpenLayers, Leaflet etc) ikke optimale (SVG, Canvas)</li>
+            <li>Brug af Web GL er meget lovende, men skal udvikles</li>
+          </ul>
+				</section>
+        <section>
+          <h2>Ingen standarder</h2>
+          <p>
+            Hverken de jura eller de facto
+          </p>
+        </section>
+				<section>
+          <h2>Klippe-klistre?</h2>
+          <p>Skal polygoner der overlapper tile grænser klippes, klistres eller kopieres?</p>
+				</section>
+        <section>
+          <h2>Formater</h2>
+            <ul>
+              <li>GeoJSON</li>
+              <li>Protocol buffers</li>
+              <li>...</li>
+            </ul>					
+        </section>
+			</section>
+			<!-- Udfordringer end -->
+      
 			<section>
 				<h1>Tak</h1>
 				<h3>Spørgsmål?</h3>
